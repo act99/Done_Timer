@@ -1,5 +1,6 @@
 import 'package:circular_countdown_timer/circular_countdown_timer.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:numberpicker/numberpicker.dart';
 import 'package:stop_watch_timer/stop_watch_timer.dart';
 import 'package:vibration/vibration.dart';
@@ -38,8 +39,8 @@ class _OnlyTimerScreenState extends State<OnlyTimerScreen> {
               backgroundColor: null,
               strokeWidth: height * 0.01,
               textStyle: TextStyle(
-                  fontSize: 22.0,
-                  color: Colors.black,
+                  fontSize: widget.changeFontSize * 0.6,
+                  color: Theme.of(context).shadowColor,
                   fontWeight: FontWeight.bold),
               isReverse: false,
               isReverseAnimation: false,
@@ -52,43 +53,45 @@ class _OnlyTimerScreenState extends State<OnlyTimerScreen> {
                 print('Countdown Ended');
               },
             )),
-            floatingActionButton: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                FloatingActionButton.extended(
+            floatingActionButton: _isPause
+                ? Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      FloatingActionButton.extended(
+                          elevation: 0.0,
+                          onPressed: () {
+                            setState(() {
+                              _isPause = false;
+                              _controller.restart();
+                              _controller.pause();
+                              _isStart = false;
+                            });
+                          },
+                          icon: Icon(Icons.stop),
+                          label: Text("Stop")),
+                      FloatingActionButton.extended(
+                          elevation: 0.0,
+                          onPressed: () {
+                            setState(() {
+                              _isPause = false;
+                              _controller.resume();
+                            });
+                          },
+                          icon: Icon(Icons.play_arrow),
+                          label: Text("Start")),
+                    ],
+                  )
+                : FloatingActionButton.extended(
                     elevation: 0.0,
                     onPressed: () {
                       setState(() {
-                        if (_isPause) {
-                          _isPause = false;
-                          _controller.resume();
-                        } else {
-                          _isPause = true;
-                          _controller.pause();
-                        }
+                        _isPause = true;
+                        _controller.pause();
                       });
                     },
-                    icon: Icon(_isPause ? Icons.play_arrow : Icons.pause),
-                    label: Text(_isPause ? "Start" : "Pause")),
-                FloatingActionButton.extended(
-                    elevation: 0.0,
-                    onPressed: () {
-                      setState(() {
-                        if (_isPause) {
-                          _isPause = false;
-                          _controller.restart();
-                          _controller.pause();
-                          _isStart = false;
-                        } else {
-                          _isPause = true;
-                          _controller.pause();
-                        }
-                      });
-                    },
-                    icon: Icon(_isPause ? Icons.play_arrow : Icons.pause),
-                    label: Text(_isPause ? "Restart" : "Pause")),
-              ],
-            ),
+                    label: Text("Pause"),
+                    icon: Icon(Icons.pause_sharp),
+                  ),
           )
         : Container(
             decoration: BoxDecoration(
@@ -99,17 +102,14 @@ class _OnlyTimerScreenState extends State<OnlyTimerScreen> {
             child: Stack(
               children: [
                 Column(
-                  children: [
-                    SizedBox(
-                      height: height * 0.28,
-                    ),
-                  ],
-                ),
-                Column(
                   children: <Widget>[
+                    SizedBox(
+                      height: height * 0.15,
+                    ),
                     Container(
                       height: height * 0.15,
                       child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: <Widget>[
                           Container(
                             width: width * 0.166,
@@ -206,6 +206,9 @@ class _OnlyTimerScreenState extends State<OnlyTimerScreen> {
                         ],
                       ),
                     ),
+                    SizedBox(
+                      height: height * 0.05,
+                    ),
                     Container(
                       height: height * 0.2,
                       child: Row(
@@ -213,7 +216,7 @@ class _OnlyTimerScreenState extends State<OnlyTimerScreen> {
                         children: <Widget>[
                           FlatButton(
                             child: Text(
-                              "Set",
+                              "Start",
                               style: TextStyle(
                                   color: Theme.of(context).shadowColor,
                                   fontSize: width * 0.032),

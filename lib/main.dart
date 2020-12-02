@@ -82,6 +82,7 @@ class _MyAppState extends State<MyApp> {
         child: ThemeConsumer(
           child: Builder(
             builder: (themeContext) => MaterialApp(
+              debugShowCheckedModeBanner: false,
               title: 'Just Timer',
               theme: ThemeProvider.themeOf(themeContext).data,
               home: TimerPage(),
