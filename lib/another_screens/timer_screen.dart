@@ -24,26 +24,8 @@ class TimerPage extends StatefulWidget {
 class _TimerPageState extends State<TimerPage> with TickerProviderStateMixin {
 // 탭 컨트롤
   TabController _controller;
-  int _currentIndex = 0;
-  int _prevControllerIndex = 0;
+
   List _keys = [];
-  AnimationController _animationControllerOn;
-  AnimationController _animationControllerOff;
-
-  Animation _colorTweenBackgroundOn;
-  Animation _colorTweenBackgroundOff;
-
-  Animation _colorTweenForegroundOn;
-  Animation _colorTweenForegroundOff;
-  double _aniValue = 0.0;
-  double _prevAniValue = 0.0;
-
-  Color _foregroundOn = Colors.white;
-  Color _foregroundOff = Colors.black;
-
-  Color _backgroundOn = Colors.blue;
-  Color _backgroundOff = Colors.grey[300];
-  bool _buttonTap = false;
 
 //-------------------------------
 
@@ -55,9 +37,9 @@ class _TimerPageState extends State<TimerPage> with TickerProviderStateMixin {
   int currentMinute = 0;
   int currentHour = 0;
 
-  int settingHours = 1;
-  int settingMinutes = 1;
-  int settingSeconds = 1;
+  int settingHours = 0;
+  int settingMinutes = 0;
+  int settingSeconds = 0;
 
   NumberPicker hourPicker;
   NumberPicker minutePicker;
@@ -229,15 +211,14 @@ class _TimerPageState extends State<TimerPage> with TickerProviderStateMixin {
                                         height: height * 0.03,
                                       ),
                                       Text(
-                                        '시계',
+                                        'Clock',
                                         style:
-                                            TextStyle(fontSize: height * 0.036),
+                                            TextStyle(fontSize: height * 0.024),
                                       ),
                                     ],
                                   ),
                                   color: Theme.of(context).focusColor,
                                   onPressed: () {
-                                    _buttonTap = true;
                                     _controller.animateTo(0);
                                     // _setCurrentIndex(0);
                                     // _scrollTo(0);
@@ -261,10 +242,10 @@ class _TimerPageState extends State<TimerPage> with TickerProviderStateMixin {
                                         color: Theme.of(context).shadowColor,
                                       ),
                                       SizedBox(
-                                        height: height * 0.02,
+                                        height: height * 0.026,
                                       ),
                                       Text(
-                                        '  반복\n타이머',
+                                        'Repeat',
                                         style:
                                             TextStyle(fontSize: height * 0.024),
                                       ),
@@ -272,7 +253,6 @@ class _TimerPageState extends State<TimerPage> with TickerProviderStateMixin {
                                   ),
                                   color: Theme.of(context).focusColor,
                                   onPressed: () {
-                                    _buttonTap = true;
                                     _controller.animateTo(1);
                                     // _setCurrentIndex(1);
                                     // _scrollTo(1);
@@ -299,15 +279,14 @@ class _TimerPageState extends State<TimerPage> with TickerProviderStateMixin {
                                         height: height * 0.03,
                                       ),
                                       Text(
-                                        '스톱워치',
+                                        'StopWatch',
                                         style:
-                                            TextStyle(fontSize: height * 0.024),
+                                            TextStyle(fontSize: height * 0.02),
                                       ),
                                     ],
                                   ),
                                   color: Theme.of(context).focusColor,
                                   onPressed: () {
-                                    _buttonTap = true;
                                     _controller.animateTo(2);
                                   }),
                             ),
@@ -332,15 +311,14 @@ class _TimerPageState extends State<TimerPage> with TickerProviderStateMixin {
                                         height: height * 0.04,
                                       ),
                                       Text(
-                                        '타이머',
+                                        'Timer',
                                         style:
-                                            TextStyle(fontSize: height * 0.036),
+                                            TextStyle(fontSize: height * 0.024),
                                       ),
                                     ],
                                   ),
                                   color: Theme.of(context).focusColor,
                                   onPressed: () {
-                                    _buttonTap = true;
                                     _controller.animateTo(3);
                                   }),
                             ),
@@ -764,259 +742,12 @@ class _TimerPageState extends State<TimerPage> with TickerProviderStateMixin {
                                                             fontSize: height *
                                                                 0.048)),
                                                     onPressed: () {
-                                                      showDialog(
-                                                        context: context,
-                                                        builder: (context) {
-                                                          return Scaffold(
-                                                            appBar: AppBar(
-                                                              iconTheme: IconThemeData(
-                                                                  color: Theme.of(
-                                                                          context)
-                                                                      .shadowColor),
-                                                              backgroundColor:
-                                                                  Colors
-                                                                      .transparent,
-                                                              shadowColor: Colors
-                                                                  .transparent,
-                                                            ),
-                                                            body: FutureBuilder(
-                                                              future: DBHelper()
-                                                                  .readAllData(),
-                                                              builder: (context,
-                                                                  snapshot) {
-                                                                if (snapshot
-                                                                    .hasData) {
-                                                                  return Row(
-                                                                    children: <
-                                                                        Widget>[
-                                                                      Container(
-                                                                        width: width *
-                                                                            0.5,
-                                                                        color: Colors
-                                                                            .transparent,
-                                                                        child:
-                                                                            Container(
-                                                                          alignment:
-                                                                              Alignment.topCenter,
-                                                                          child:
-                                                                              Column(
-                                                                            children: [
-                                                                              Container(
-                                                                                height: height * 0.15,
-                                                                                child: Center(
-                                                                                  child: Text(
-                                                                                    'History',
-                                                                                    style: TextStyle(color: Theme.of(context).shadowColor, fontSize: height * 0.048),
-                                                                                  ),
-                                                                                ),
-                                                                              ),
-                                                                              Container(
-                                                                                height: height * 0.65,
-                                                                                child: ListView.builder(
-                                                                                  shrinkWrap: true,
-                                                                                  itemCount: snapshot.data.length,
-                                                                                  itemBuilder: (context, index) {
-                                                                                    UserSetting item = snapshot.data[index];
-                                                                                    return Dismissible(
-                                                                                      key: UniqueKey(),
-                                                                                      onDismissed: (direction) {
-                                                                                        DBHelper().deleteData(item.id);
-                                                                                        setState(() {});
-                                                                                      },
-                                                                                      child: Container(
-                                                                                        margin: EdgeInsets.only(bottom: height * 0.03, right: width * 0.01, left: width * 0.01),
-                                                                                        width: width * 0.4,
-                                                                                        decoration: BoxDecoration(
-                                                                                          borderRadius: BorderRadius.circular(30),
-                                                                                          border: Border(
-                                                                                            bottom: BorderSide(color: Colors.grey),
-                                                                                            top: BorderSide(color: Colors.grey),
-                                                                                            right: BorderSide(color: Colors.grey),
-                                                                                            left: BorderSide(color: Colors.grey),
-                                                                                          ),
-                                                                                        ),
-                                                                                        child: ListTile(
-                                                                                          trailing: Container(
-                                                                                            width: width * 0.1,
-                                                                                            child: Row(
-                                                                                              children: [
-                                                                                                Text('<---', style: TextStyle(color: Colors.red, fontSize: height * 0.064)),
-                                                                                                Icon(
-                                                                                                  Icons.delete,
-                                                                                                  color: Colors.red,
-                                                                                                ),
-                                                                                              ],
-                                                                                            ),
-                                                                                          ),
-                                                                                          title: Text('${item.hours}h ${item.minutes}m ${item.seconds}s'),
-                                                                                          onTap: () async {
-                                                                                            setState(() {
-                                                                                              settingHours = item.hours;
-                                                                                              settingMinutes = item.minutes;
-                                                                                              settingSeconds = item.seconds;
-                                                                                            });
-                                                                                            await DBHelper().readAllData();
-                                                                                            Navigator.pop(context);
-                                                                                          },
-                                                                                        ),
-                                                                                      ),
-                                                                                    );
-                                                                                  },
-                                                                                ),
-                                                                              ),
-                                                                            ],
-                                                                          ),
-                                                                        ),
-                                                                      ),
-                                                                      Container(
-                                                                        decoration: BoxDecoration(
-                                                                            color:
-                                                                                Colors.transparent,
-                                                                            border: Border(left: BorderSide(width: 1.0, color: Colors.grey))),
-                                                                        width: width *
-                                                                            0.5,
-                                                                        height:
-                                                                            height *
-                                                                                1,
-                                                                        child:
-                                                                            Stack(
-                                                                          children: [
-                                                                            Column(
-                                                                              children: [
-                                                                                SizedBox(
-                                                                                  height: height * 0.28,
-                                                                                ),
-                                                                              ],
-                                                                            ),
-                                                                            Column(
-                                                                              children: <Widget>[
-                                                                                Container(
-                                                                                  height: height * 0.15,
-                                                                                  child: Row(
-                                                                                    children: <Widget>[
-                                                                                      Container(
-                                                                                        width: width * 0.166,
-                                                                                        child: Center(
-                                                                                          child: Text(
-                                                                                            'Hour',
-                                                                                            style: TextStyle(color: Theme.of(context).shadowColor, fontSize: height * 0.048),
-                                                                                          ),
-                                                                                        ),
-                                                                                      ),
-                                                                                      Container(
-                                                                                        width: width * 0.166,
-                                                                                        child: Center(
-                                                                                          child: Text(
-                                                                                            'Minute',
-                                                                                            style: TextStyle(color: Theme.of(context).shadowColor, fontSize: height * 0.048),
-                                                                                          ),
-                                                                                        ),
-                                                                                      ),
-                                                                                      Container(
-                                                                                        width: width * 0.166,
-                                                                                        child: Center(
-                                                                                          child: Text(
-                                                                                            'Second',
-                                                                                            style: TextStyle(color: Theme.of(context).shadowColor, fontSize: height * 0.048),
-                                                                                          ),
-                                                                                        ),
-                                                                                      ),
-                                                                                    ],
-                                                                                  ),
-                                                                                ),
-                                                                                Container(
-                                                                                  height: height * 0.4,
-                                                                                  child: Stack(
-                                                                                    children: [
-                                                                                      Center(
-                                                                                        child: Container(
-                                                                                          margin: EdgeInsets.only(right: width * 0.05, left: width * 0.05),
-                                                                                          decoration: BoxDecoration(color: Colors.grey, borderRadius: BorderRadius.circular(10)),
-                                                                                          height: height * 0.12,
-                                                                                        ),
-                                                                                      ),
-                                                                                      Row(
-                                                                                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                                                                        children: [
-                                                                                          NumberPicker.integer(
-                                                                                              selectedTextStyle: TextStyle(color: Theme.of(context).shadowColor),
-                                                                                              textStyle: TextStyle(color: Theme.of(context).shadowColor),
-                                                                                              initialValue: currentHour,
-                                                                                              minValue: 0,
-                                                                                              maxValue: 12,
-                                                                                              onChanged: (newValue) {
-                                                                                                setState(() {
-                                                                                                  currentHour = newValue;
-                                                                                                });
-                                                                                              }),
-                                                                                          NumberPicker.integer(
-                                                                                            selectedTextStyle: TextStyle(color: Theme.of(context).shadowColor),
-                                                                                            textStyle: TextStyle(color: Theme.of(context).shadowColor),
-                                                                                            initialValue: currentMinute,
-                                                                                            minValue: 0,
-                                                                                            maxValue: 60,
-                                                                                            onChanged: (value) => setState(
-                                                                                              () => currentMinute = value,
-                                                                                            ),
-                                                                                          ),
-                                                                                          NumberPicker.integer(
-                                                                                            selectedTextStyle: TextStyle(color: Theme.of(context).shadowColor),
-                                                                                            textStyle: TextStyle(color: Theme.of(context).shadowColor),
-                                                                                            initialValue: currentSecond,
-                                                                                            minValue: 0,
-                                                                                            maxValue: 60,
-                                                                                            onChanged: (value) => setState(
-                                                                                              () => currentSecond = value,
-                                                                                            ),
-                                                                                          ),
-                                                                                        ],
-                                                                                      ),
-                                                                                    ],
-                                                                                  ),
-                                                                                ),
-                                                                                Container(
-                                                                                  height: height * 0.2,
-                                                                                  child: Row(
-                                                                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                                                                    children: <Widget>[
-                                                                                      FlatButton(
-                                                                                        child: Text(
-                                                                                          "Set",
-                                                                                          style: TextStyle(color: Theme.of(context).shadowColor, fontSize: width * 0.032),
-                                                                                        ),
-                                                                                        onPressed: () {
-                                                                                          createUserTimer(currentHour, currentMinute, currentSecond);
-
-                                                                                          setState(() {
-                                                                                            currentHour = 0;
-                                                                                            currentMinute = 0;
-                                                                                            currentSecond = 0;
-                                                                                          });
-                                                                                          Navigator.pop(context);
-                                                                                          // Navigator.pop(context);
-                                                                                        },
-                                                                                      ),
-                                                                                    ],
-                                                                                  ),
-                                                                                ),
-                                                                              ],
-                                                                            ),
-                                                                          ],
-                                                                        ),
-                                                                      )
-                                                                    ],
-                                                                  );
-                                                                } else {
-                                                                  return Center(
-                                                                    child:
-                                                                        CircularProgressIndicator(),
-                                                                  );
-                                                                }
-                                                              },
-                                                            ),
-                                                          );
-                                                        },
-                                                      );
+                                                      Navigator.push(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                              builder: (context) =>
+                                                                  settingTimer(
+                                                                      context)));
                                                     },
                                                   )
                                                 : Container()),
@@ -1162,4 +893,280 @@ class _TimerPageState extends State<TimerPage> with TickerProviderStateMixin {
   //     return _foregroundOff;
   //   }
   // }
+  Widget settingTimer(BuildContext context) {
+    Size screenSize = MediaQuery.of(context).size;
+    double width = screenSize.width;
+    double height = screenSize.height;
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        shadowColor: Colors.transparent,
+        iconTheme: IconThemeData(color: Theme.of(context).shadowColor),
+      ),
+      body: FutureBuilder(
+        future: DBHelper().readAllData(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return Container(
+              width: width * 1,
+              height: height * 1,
+              child: Row(
+                children: <Widget>[
+                  Container(
+                    width: width * 0.5,
+                    color: Colors.transparent,
+                    child: Container(
+                      alignment: Alignment.topCenter,
+                      child: Column(
+                        children: [
+                          Container(
+                            height: height * 0.15,
+                            child: Center(
+                              child: Text(
+                                'History',
+                                style: TextStyle(
+                                    color: Theme.of(context).shadowColor,
+                                    fontSize: height * 0.048),
+                              ),
+                            ),
+                          ),
+                          Container(
+                            height: height * 0.58,
+                            child: ListView.builder(
+                              shrinkWrap: true,
+                              itemCount: snapshot.data.length,
+                              itemBuilder: (context, index) {
+                                UserSetting item = snapshot.data[index];
+                                return Dismissible(
+                                  key: UniqueKey(),
+                                  onDismissed: (direction) {
+                                    DBHelper().deleteData(item.id);
+                                    setState(() {});
+                                  },
+                                  child: Container(
+                                    margin: EdgeInsets.only(
+                                        bottom: height * 0.03,
+                                        right: width * 0.01,
+                                        left: width * 0.01),
+                                    width: width * 0.4,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(30),
+                                      border: Border(
+                                        bottom: BorderSide(color: Colors.grey),
+                                        top: BorderSide(color: Colors.grey),
+                                        right: BorderSide(color: Colors.grey),
+                                        left: BorderSide(color: Colors.grey),
+                                      ),
+                                    ),
+                                    child: ListTile(
+                                      trailing: Container(
+                                        width: width * 0.1,
+                                        child: Row(
+                                          children: [
+                                            Text('<---',
+                                                style: TextStyle(
+                                                    color: Colors.red,
+                                                    fontSize: height * 0.064)),
+                                            Icon(
+                                              Icons.delete,
+                                              color: Colors.red,
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      title: Text(
+                                          '${item.hours}h ${item.minutes}m ${item.seconds}s'),
+                                      onTap: () async {
+                                        setState(() {
+                                          settingHours = item.hours;
+                                          settingMinutes = item.minutes;
+                                          settingSeconds = item.seconds;
+                                        });
+                                        await DBHelper().readAllData();
+                                        Navigator.pop(context);
+                                      },
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Container(
+                    decoration: BoxDecoration(
+                        color: Colors.transparent,
+                        border: Border(
+                            left: BorderSide(width: 1.0, color: Colors.grey))),
+                    width: width * 0.5,
+                    height: height * 1,
+                    child: Column(
+                      children: <Widget>[
+                        Container(
+                          height: height * 0.15,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: <Widget>[
+                              Container(
+                                child: Center(
+                                  child: Text(
+                                    'Hour',
+                                    style: TextStyle(
+                                        color: Theme.of(context).shadowColor,
+                                        fontSize: height * 0.032),
+                                  ),
+                                ),
+                              ),
+                              Container(
+                                child: Center(
+                                  child: Text(
+                                    '   Minute',
+                                    style: TextStyle(
+                                        color: Theme.of(context).shadowColor,
+                                        fontSize: height * 0.032),
+                                  ),
+                                ),
+                              ),
+                              Container(
+                                child: Center(
+                                  child: Text(
+                                    'Second',
+                                    style: TextStyle(
+                                        color: Theme.of(context).shadowColor,
+                                        fontSize: height * 0.032),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Container(
+                          height: height * 0.38,
+                          child: Stack(
+                            children: [
+                              Container(
+                                margin: EdgeInsets.only(
+                                    right: width * 0.05,
+                                    left: width * 0.05,
+                                    top: height * 0.155),
+                                decoration: BoxDecoration(
+                                    color: Colors.grey,
+                                    borderRadius: BorderRadius.circular(10)),
+                                height: height * 0.12,
+                              ),
+                              Container(
+                                margin: EdgeInsets.only(top: height * 0.0),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    Container(
+                                      width: width * 0.12,
+                                      child: NumberPicker.integer(
+                                          selectedTextStyle: TextStyle(
+                                              color:
+                                                  Theme.of(context).shadowColor,
+                                              fontSize: height * 0.024),
+                                          textStyle: TextStyle(
+                                              color:
+                                                  Theme.of(context).shadowColor,
+                                              fontSize: height * 0.024),
+                                          initialValue: currentHour,
+                                          minValue: 0,
+                                          maxValue: 12,
+                                          onChanged: (newValue) {
+                                            setState(() {
+                                              currentHour = newValue;
+                                            });
+                                          }),
+                                    ),
+                                    Container(
+                                      width: width * 0.12,
+                                      child: NumberPicker.integer(
+                                        selectedTextStyle: TextStyle(
+                                            color:
+                                                Theme.of(context).shadowColor,
+                                            fontSize: height * 0.024),
+                                        textStyle: TextStyle(
+                                            color:
+                                                Theme.of(context).shadowColor,
+                                            fontSize: height * 0.024),
+                                        initialValue: currentMinute,
+                                        minValue: 0,
+                                        maxValue: 60,
+                                        onChanged: (value) => setState(
+                                          () => currentMinute = value,
+                                        ),
+                                      ),
+                                    ),
+                                    Container(
+                                      width: width * 0.12,
+                                      child: NumberPicker.integer(
+                                        selectedTextStyle: TextStyle(
+                                            color:
+                                                Theme.of(context).shadowColor,
+                                            fontSize: height * 0.024),
+                                        textStyle: TextStyle(
+                                            color:
+                                                Theme.of(context).shadowColor,
+                                            fontSize: height * 0.024),
+                                        initialValue: currentSecond,
+                                        minValue: 0,
+                                        maxValue: 60,
+                                        onChanged: (value) => setState(
+                                          () => currentSecond = value,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Container(
+                          height: height * 0.2,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: <Widget>[
+                              FlatButton(
+                                child: Text(
+                                  "Set",
+                                  style: TextStyle(
+                                      color: Theme.of(context).shadowColor,
+                                      fontSize: height * 0.06),
+                                ),
+                                onPressed: () {
+                                  createUserTimer(currentHour, currentMinute,
+                                      currentSecond);
+
+                                  setState(() {
+                                    currentHour = 0;
+                                    currentMinute = 0;
+                                    currentSecond = 0;
+                                  });
+                                  Navigator.pop(context);
+                                  // Navigator.pop(context);
+                                },
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
+                ],
+              ),
+            );
+          } else {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+        },
+      ),
+    );
+  }
 }

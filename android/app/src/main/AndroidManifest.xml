@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.act99.timer">
+    package="com.act99.justclock">
 
     <uses-permission android:name="android.permission.VIBRATE"/>
 
@@ -10,7 +10,7 @@
          FlutterApplication and put your custom class here. -->
     <application
         android:name="io.flutter.app.FlutterApplication"
-        android:label="Just Timer"
+        android:label="Just Clock"
         android:icon="@mipmap/launcher_icon">
         <activity
             android:name=".MainActivity"

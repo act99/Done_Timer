@@ -18,9 +18,6 @@ class DateTimeClock extends StatelessWidget {
           return Center(
             child: Column(
               children: [
-                SizedBox(
-                  height: height * 0.05,
-                ),
                 Text(
                     formatDate(DateTime.now(), [
                       hh,
@@ -38,7 +35,7 @@ class DateTimeClock extends StatelessWidget {
                         am,
                       ]), // add pubspec.yaml the date_format: ^1.0.9
                       style: TextStyle(
-                        fontSize: changeFontSize * 0.2,
+                        fontSize: height * 0.036,
                         fontWeight: FontWeight.w600,
                       )),
                 ),
