@@ -960,17 +960,31 @@ class _TimerPageState extends State<TimerPage> with TickerProviderStateMixin {
                                     ),
                                     child: ListTile(
                                       trailing: Container(
-                                        width: width * 0.1,
+                                        width: width * 0.15,
                                         child: Row(
-                                          children: [
-                                            Text('<---',
-                                                style: TextStyle(
-                                                    color: Colors.red,
-                                                    fontSize: height * 0.064)),
-                                            Icon(
-                                              Icons.delete,
-                                              color: Colors.red,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: <Widget>[
+                                            Row(
+                                              children: [
+                                                Text('<---',
+                                                    style: TextStyle(
+                                                        color: Colors.red,
+                                                        fontSize:
+                                                            height * 0.064)),
+                                                Icon(
+                                                  Icons.delete,
+                                                  color: Colors.red,
+                                                ),
+                                              ],
                                             ),
+                                            settingHours == item.hours &&
+                                                    settingMinutes ==
+                                                        item.minutes &&
+                                                    settingSeconds ==
+                                                        item.seconds
+                                                ? Icon(Icons.check)
+                                                : Container()
                                           ],
                                         ),
                                       ),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
+import 'package:screen/screen.dart';
 import 'package:theme_provider/theme_provider.dart';
 import 'package:timer/another_screens/datetime_screen.dart';
 import 'package:timer/another_screens/timer_screen.dart';
@@ -9,6 +10,7 @@ import 'package:timer/another_screens/timer_screen.dart';
 void main() {
   runApp(MyApp());
   SystemChrome.setEnabledSystemUIOverlays([]);
+  Screen.keepOn(true);
 }
 
 class MyApp extends StatefulWidget {
